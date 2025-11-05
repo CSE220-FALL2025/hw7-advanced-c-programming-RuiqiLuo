@@ -138,6 +138,7 @@ matrix_sf *transpose_mat_sf(const matrix_sf *mat)
 matrix_sf *create_matrix_sf(char name, const char *expr)
 {
     printf("-----now it's create_matrix_sf function-----\n");
+    fflush(stdout);
     unsigned int num_rows = 0;
     unsigned int num_cols = 0;
 
@@ -171,7 +172,7 @@ matrix_sf *create_matrix_sf(char name, const char *expr)
         str_count++;
     }
     // check and write the number
-    char *start = expr + str_count;
+
     end = NULL;
     while (str[str_count] != ']')
     {
@@ -180,6 +181,11 @@ matrix_sf *create_matrix_sf(char name, const char *expr)
         {
             str_count++;
         }
+        if (str[str_count] == ']')
+        {
+            break;
+        }
+        const char *start = expr + str_count;
         // use strtol to get number
         int num = strtol(start, &end, 10); // notice that "end" is wrong,"&end" is right
         // write
@@ -188,6 +194,7 @@ matrix_sf *create_matrix_sf(char name, const char *expr)
         tem_num_count++;
         // move the "start" pointer to the "end" position
         start = end;
+        str_count = end - expr;
     }
     matrix_sf *m = malloc(sizeof(matrix_sf) + tem_num_count * sizeof(int));
     // write the number to structure
@@ -196,7 +203,7 @@ matrix_sf *create_matrix_sf(char name, const char *expr)
         *(m->values + count) = tem_num[count];
         printf("final value:%d\n", *(m->values + count));
     }
-    m->name = '\0';
+    m->name = name;
     m->num_rows = num_rows;
     m->num_cols = num_cols;
     return m;
