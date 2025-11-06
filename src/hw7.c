@@ -1,18 +1,132 @@
 #include "hw7.h"
 // in the begnning:[====] Synthesis: Tested: 70 | Passing: 29 | Failing: 41 | Crashing: 18
-// now:[====] Synthesis: Tested: 70 | Passing: 31 | Failing: 41 | Crashing: 18
+// now:[====] Synthesis: Tested: 70 | Passing: 43 | Failing: 27 | Crashing: 7
+
+/*
+typedef struct bst_sf {
+    matrix_sf *mat;
+    struct bst_sf *left_child;
+    struct bst_sf *right_child;
+} bst_sf;
+*/
 bst_sf *insert_bst_sf(matrix_sf *mat, bst_sf *root)
 {
-    return NULL;
+    printf("----insert_bst_sf start----\n");
+    bst_sf *new_root;
+    // if root == NULL
+    if (root == NULL)
+    {
+        new_root = malloc(sizeof(bst_sf));
+        new_root->mat = mat;
+        new_root->left_child = NULL;
+        new_root->right_child = NULL;
+        printf("create the root node: %c\n", new_root->mat->name);
+        return new_root;
+    }
+    else
+    {
+        new_root = root;
+    }
+    bst_sf *insert = new_root;
+    bst_sf *new_node = malloc(sizeof(bst_sf));
+
+    // if root != NULL
+
+    while (1)
+    {
+        printf("now we at: %c\n", insert->mat->name);
+        if (insert->mat->name > mat->name) //(*(*insert).mat).name
+        {
+            // put at left,notice the sequence about "check" and "move"
+            if (insert->left_child == NULL)
+            {
+                new_node->mat = mat;
+                new_node->left_child = NULL;
+                new_node->right_child = NULL;
+                insert->left_child = new_node;
+                printf("insert at left: %c\n", insert->left_child->mat->name);
+                return new_root;
+            }
+            else
+            {
+                insert = insert->left_child;
+            }
+        }
+        if (insert->mat->name < mat->name)
+        {
+            // put at right
+            if (insert->right_child == NULL)
+            {
+                new_node->mat = mat;
+                new_node->left_child = NULL;
+                new_node->right_child = NULL;
+                insert->right_child = new_node;
+                printf("insert at right: %c\n", insert->right_child->mat->name);
+                return new_root;
+            }
+            else
+            {
+                insert = insert->right_child;
+            }
+        }
+    }
+    return 0;
 }
 
 matrix_sf *find_bst_sf(char name, bst_sf *root)
 {
+    printf("----find_bst_df----\n");
+    printf("Should find:%c\n", name);
+    // root == NULL
+    if (root == NULL)
+    {
+        return NULL;
+    }
+    bst_sf *search = root;
+    while (search != NULL)
+    {
+        printf("now we at: %c\n", search->mat->name);
+        if (search->mat->name == name)
+        {
+            return search->mat;
+        }
+        if (search->mat->name > name)
+        {
+            if (search->left_child != NULL)
+            {
+                search = search->left_child;
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+        if (search->mat->name < name)
+        {
+            if (search->right_child != NULL)
+            {
+                search = search->right_child;
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+    }
     return NULL;
 }
 
 void free_bst_sf(bst_sf *root)
 {
+    printf("----free_bst_sf----\n");
+    //=====!!!!important=====
+    if (root == NULL)
+    {
+        return;
+    }
+    free_bst_sf(root->left_child);
+    free_bst_sf(root->right_child);
+    free(root);
 }
 // day 1
 /*
@@ -221,6 +335,7 @@ matrix_sf *evaluate_expr_sf(char name, char *expr, bst_sf *root)
 // day 1
 matrix_sf *execute_script_sf(char *filename)
 {
+
     return NULL;
 }
 
