@@ -498,10 +498,10 @@ char *infix2postfix_sf(char *infix)
 
 matrix_sf *evaluate_expr_sf(char name, char *expr, bst_sf *root)
 {
-    printf("----evaluate_expr_sf----\n");
+    // printf("----evaluate_expr_sf----\n");
     // use infix2postfix_sf
     char *postfix = infix2postfix_sf(expr);
-    printf("postfix:%s\n", postfix);
+    // printf("postfix:%s\n", postfix);
     //  create stack to store the value
     struct calculate_matrix *stack = malloc(sizeof(struct calculate_matrix));
     stack->top = -1;
@@ -514,14 +514,14 @@ matrix_sf *evaluate_expr_sf(char name, char *expr, bst_sf *root)
             matrix_sf *input = find_bst_sf(postfix[count], root);
             if (input != NULL)
             {
-                printf("now find %c\n", postfix[count]);
+                // printf("now find %c\n", postfix[count]);
                 push_matrix(stack, input);
                 // free(input); // is that legal?will that clean the bst_tree? No!, free's function is free the space that pointer point to
             }
         }
         else if (postfix[count] == '\'')
         {
-            printf("----now find '----\n");
+            // printf("----now find '----\n");
             matrix_sf *pop = pop_matrix(stack);
             matrix_sf *outcome = transpose_mat_sf(pop);
             outcome->name = '\0';
@@ -531,7 +531,7 @@ matrix_sf *evaluate_expr_sf(char name, char *expr, bst_sf *root)
         }
         else if (postfix[count] == '+')
         {
-            printf("----now find +----\n");
+            // printf("----now find +----\n");
             matrix_sf *right = pop_matrix(stack);
             matrix_sf *left = pop_matrix(stack);
             matrix_sf *outcome = add_mats_sf(left, right);
@@ -543,7 +543,7 @@ matrix_sf *evaluate_expr_sf(char name, char *expr, bst_sf *root)
         }
         else if (postfix[count] == '*')
         {
-            printf("----now find *----\n");
+            // printf("----now find *----\n");
             matrix_sf *right = pop_matrix(stack);
             matrix_sf *left = pop_matrix(stack);
             matrix_sf *outcome = mult_mats_sf(left, right);
@@ -567,9 +567,94 @@ matrix_sf *evaluate_expr_sf(char name, char *expr, bst_sf *root)
 matrix_sf *execute_script_sf(char *filename)
 {
 
-    return NULL;
-}
+    // 1.open file
+    FILE *file = fopen(filename, "r");
+    if (!file)
+    {
+        perror("fopen");
+        return NULL;
+    }
+    // 2.read file
+    char *line = NULL;
+    size_t len = MAX_LINE_LEN;
+    bst_sf *root = NULL;          // shouldn't in the while
+    matrix_sf *final_node = NULL; // same as root pointer
+    // 3.process each line
+    while (getline(&line, &len, file) != -1)
+    {
+        // skip white space line
+        if (strlen(line) == 0)
+        {
+            continue;
+        }
 
+        // clear the \n
+        for (int i = 0; line[i] != '\0'; i++)
+        {
+            if (line[i] == '\n')
+            {
+                line[i] = '\0';
+            }
+        }
+
+        // clean the preceding space
+        int count = 0;
+        while (isspace(line[count]))
+        {
+            count++;
+        }
+        // get the name of matrix
+        char name = line[count];
+        // find '='
+        char *white_space = strchr(line, '='); // char *strchr(const char *s, int c);
+        if (white_space == NULL)
+        {
+            continue;
+        }
+
+        white_space = white_space + 1;
+        while (*white_space == ' ')
+        {
+            white_space++;
+        }
+        char *flag = white_space;
+        //  process different situation based on each line
+        matrix_sf *node = NULL;
+        if (strchr(flag, '['))
+        {
+            node = create_matrix_sf(name, flag);
+        }
+        else
+        {
+            node = evaluate_expr_sf(name, flag, root);
+        }
+        // insert in tree
+        root = insert_bst_sf(node, root);
+        final_node = node; // reuturn the last time matrix, but why it's wrong if I paln to free here
+    }
+    // close the file
+    free(line);
+    fclose(file);
+
+    matrix_sf *result = NULL;
+    if (final_node != NULL)
+    {
+        int total = final_node->num_rows * final_node->num_cols;
+
+        result = malloc(sizeof(matrix_sf) + total * sizeof(int));
+
+        result->name = final_node->name;
+        result->num_rows = final_node->num_rows;
+        result->num_cols = final_node->num_cols;
+
+        for (int i = 0; i < total; i++)
+        {
+            result->values[i] = final_node->values[i];
+        }
+    }
+    free(root);
+    return result;
+}
 // This is a utility function used during testing. Feel free to adapt the code to implement some of
 // the assignment. Feel equally free to ignore it.
 matrix_sf *copy_matrix(unsigned int num_rows, unsigned int num_cols, int values[])
