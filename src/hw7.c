@@ -207,6 +207,8 @@ void free_bst_sf(bst_sf *root)
     }
     free_bst_sf(root->left_child);
     free_bst_sf(root->right_child);
+
+    free(root->mat);
     free(root);
 }
 // day 1
@@ -633,7 +635,8 @@ matrix_sf *execute_script_sf(char *filename)
         final_node = node; // reuturn the last time matrix, but why it's wrong if I paln to free here
     }
     // close the file
-    free(line);
+    // free(line); // should free that because of getline，should use free_bst_sf
+
     fclose(file);
 
     matrix_sf *result = NULL;
@@ -652,7 +655,7 @@ matrix_sf *execute_script_sf(char *filename)
             result->values[i] = final_node->values[i];
         }
     }
-    free(root);
+    free_bst_sf(root);
     return result;
 }
 // This is a utility function used during testing. Feel free to adapt the code to implement some of

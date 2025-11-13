@@ -149,12 +149,12 @@
           "status": "PASSED"
         },
         {
-          "name": "free_bst02",
+          "name": "free_bst01",
           "assertions": 1,
           "status": "PASSED"
         },
         {
-          "name": "free_bst01",
+          "name": "free_bst02",
           "assertions": 1,
           "status": "PASSED"
         }
@@ -232,17 +232,17 @@
           "status": "PASSED"
         },
         {
+          "name": "script13",
+          "assertions": 1,
+          "status": "PASSED"
+        },
+        {
           "name": "script15",
           "assertions": 1,
           "status": "PASSED"
         },
         {
           "name": "script14",
-          "assertions": 1,
-          "status": "PASSED"
-        },
-        {
-          "name": "script13",
           "assertions": 1,
           "status": "PASSED"
         },
@@ -257,12 +257,12 @@
           "status": "PASSED"
         },
         {
-          "name": "mult_mats03",
+          "name": "script10",
           "assertions": 1,
           "status": "PASSED"
         },
         {
-          "name": "script10",
+          "name": "mult_mats03",
           "assertions": 1,
           "status": "PASSED"
         },
