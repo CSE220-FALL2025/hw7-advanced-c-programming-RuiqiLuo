@@ -1,6 +1,5 @@
+// RuiqiLuo:117626706
 #include "hw7.h"
-// in the begnning:[====] Synthesis: Tested: 70 | Passing: 29 | Failing: 41 | Crashing: 18
-// now:[====] Synthesis: Tested: 70 | Passing: 50 | Failing: 23 | Crashing: 3
 
 /*
 typedef struct bst_sf {
@@ -656,6 +655,7 @@ matrix_sf *execute_script_sf(char *filename)
         }
     }
     free_bst_sf(root);
+    free(line);
     return result;
 }
 // This is a utility function used during testing. Feel free to adapt the code to implement some of
